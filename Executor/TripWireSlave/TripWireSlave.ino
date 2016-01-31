@@ -11,19 +11,19 @@ const unsigned char PS_32 = (1 << ADPS2) | (1 << ADPS0);
 const unsigned char PS_64 = (1 << ADPS2) | (1 << ADPS1);
 const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
-TripDetector detector;
+TripDetector detector("MAIN", 5, A2, 3);
 RF24 radio(6,10);
 
 const int BatLedPin = 4;
 const int BatStatusPin = A3;
 
 //Radio pipe addresses for the 2 nodes to communicate.
-const uint64_t pipes[2] = { 0xE8E8F0F0E101, 0xF0F0F0F0D201 };
+const uint64_t pipes[2] = { 0xE8E8F0F0E102, 0xF0F0F0F0D202 };
 
 void setup() { 
   Timer1.initialize(400);         // initialize timer1, and set 100 us period
   Timer1.attachInterrupt(detectTrip);  // attaches  detectTrip() as a timer overflow interrupt
-  detector.intervalLen=400;
+  //detector.intervalLen=400;
   
   Serial.begin(9600);
   pinMode(BatLedPin, OUTPUT);
@@ -62,7 +62,7 @@ void checkBattery(){
 
 void setLaserAccuracy(long interval){
  Timer1.setPeriod(interval);
- detector.intervalLen = interval;  
+ //detector.intervalLen = interval;  
   
  // Timer1.setPeriod(40000);
  // detector.intervalLen = 40000;  
@@ -169,7 +169,7 @@ void detectTrip(){
       newTrip=true;
       timeoutCount = 0;
       prevTripStart = detector.TripStartTime;     
-      prevTripSpeed = detector.StoneSpeed; 
+      prevTripSpeed = 0; 
     }  
 
     trippedBefore=detector.isTripped; 

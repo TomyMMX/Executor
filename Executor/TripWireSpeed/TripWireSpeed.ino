@@ -24,8 +24,15 @@ const int BatStatusPin = A3;
 const uint64_t pipes[2] = { 0xE8E8F0F0E101, 0xF0F0F0F0D201 };
 
 void setup() { 
-  detector2.StopDetect(); 
-
+  
+  pinMode(2, OUTPUT);
+  pinMode(9, OUTPUT);  
+  digitalWrite(2, LOW);
+  digitalWrite(9, LOW); 
+  delay(10000);
+  
+  detector2.StopDetect();
+  
   Serial.begin(9600);
   pinMode(BatLedPin, OUTPUT);
   digitalWrite(BatLedPin, LOW);
@@ -185,12 +192,21 @@ void loop() {
 
 boolean doMain = true;
 boolean doCheck = true;
+unsigned long lastTripEnd = 0;
 
 //called from the Timer1 interrupt
 void detectTrip(){
+  
+  if(millis()-lastTripEnd < 5000){
+    detector.TurnLaserOff();
+    return;
+  } 
+  
   if(doMain){
     detector.DetectTrip();    
- 
+    
+    //every trip should be persistent for 5s
+   
     if(detector.isTripped && doCheck){    
       if(doMain){        
         prevTripStart1 = detector.TripStartMicros;
@@ -200,8 +216,9 @@ void detectTrip(){
     } 
     else if(!detector.isTripped && !doCheck){
       //trip went away
+      lastTripEnd = millis();
       doCheck = true;
-    }
+    }    
   }else{
     detector2.DetectTrip();
     

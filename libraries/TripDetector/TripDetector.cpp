@@ -72,7 +72,7 @@ void TripDetector::DetectTrip(){
 	}	
      
 	//trip when we didn't see the signal
-	if(failCount > 1){     
+	if(failCount > 5){     
 		digitalWrite(CalibrationLeds, CalibrationLedHIGH);
 		if(!isTripped){   
 			//Serial.print(Name);

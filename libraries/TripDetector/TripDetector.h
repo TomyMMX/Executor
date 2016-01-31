@@ -30,13 +30,13 @@ class TripDetector
 		int CalibrationLedState = HIGH;
 		
         //some designs of the trip wire have the polarities reversed
-		int CalibrationLedHIGH = HIGH;
-		int CalibrationLedLOW = LOW;
+		int CalibrationLedHIGH = LOW;
+		int CalibrationLedLOW = HIGH;
 
 		int LaserState = LOW;
 		
 		//sensor sensitivity (the lower the number, the more sensitive)
-		const int diff = 50;		
+		const int diff = 10;		
 
         int failCount=0;
 		int okCount=0;
